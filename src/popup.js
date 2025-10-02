@@ -49,15 +49,81 @@ const client = new Cerebras({
     });
   });
 
+  document.getElementById('translate').addEventListener('click', () => {
+    const languageSelect = document.getElementById('languageSelect').value;
+    const result = document.getElementById('translateResult');
+    result.textContent = 'Extracting text...';
+
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'GET_SELECTED_TEXT' },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            // e.g., no content script injected
+            result.textContent = 'Error: ' + chrome.runtime.lastError.message;
+            return;
+          }
+
+          if (!response || !response.text) {
+            result.textContent = 'No selection made';
+            return;
+          }
+
+          // result.textContent = response.text.slice(0, 300) + "..";
+          try {
+            // const summary = await getGeminiSummary(response.text);
+            const translation = await getCerebrasTranslation(
+              response.text,
+              languageSelect
+            );
+            result.textContent = translation;
+          } catch (e) {
+            result.textContent = 'Cerebras API Error: ' + e.message;
+          }
+        }
+      );
+    });
+  });
+
+  async function getCerebrasTranslation(text, language) {
+    const content = `Translate ${text} into ${language} language. The translation is to the point, without much context given.`;
+
+    const messages = [
+      {
+        role: 'system',
+        content:
+          'You are a translator. The user gives you text as well as language, and you translate it to the point.',
+      },
+      { role: 'user', content: `Translate ${text} into ${language} language.` },
+    ];
+
+    const res = await client.chat.completions.create({
+      messages: messages,
+      model: 'llama3.1-8b',
+    });
+    console.log(res.choices[0].message.content);
+    return res.choices[0].message.content;
+  }
+
   async function getCerebrasSummary(text) {
     // const client = new Cerebras({
     //   apiKey:csk-pm5v5kxmxr993k5wj88j2x2dnym5tntwjnvhrdhrwnwtvywh,
     // });
 
-    const content = `Take the following text and rewrite it as a clear, concise explaination in 3-4 lines depending on text length.Text:${text}`;
+    // const content = `Take the following text and rewrite it as a clear, concise explaination in 3-4 lines depending on text length.Text:${text}`;
+
+    const messages = [
+      {
+        role: 'system',
+        content:
+          'You are a teacher. The user gives you text have to explain it in 3 sentences or less. if the text is short, you can use less sentences. The explanation has to be clear and concise.',
+      },
+      { role: 'user', content: text },
+    ];
 
     const res = await client.chat.completions.create({
-      messages: [{ role: 'user', content: content }],
+      messages: messages,
       model: 'llama3.1-8b',
     });
     // if (!res.ok) {
