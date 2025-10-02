@@ -54,9 +54,11 @@ const client = new Cerebras({
     //   apiKey:csk-pm5v5kxmxr993k5wj88j2x2dnym5tntwjnvhrdhrwnwtvywh,
     // });
 
+    const content = `Take the following text and rewrite it as a clear, concise explaination in 3-4 lines depending on text length.Text:${text}`;
+
     const res = await client.chat.completions.create({
-      messages: [{ role: 'user', content: 'how are you?' }],
-      model: 'gpt-oss-120b',
+      messages: [{ role: 'user', content: content }],
+      model: 'llama3.1-8b',
     });
     // if (!res.ok) {
     //   const { error } = await res.choices[0].finish_reason;
@@ -64,6 +66,7 @@ const client = new Cerebras({
     // }
 
     // const data = await res.choices[0].message.content;
-    return res.choices[2].content ?? 'No summary';
+    console.log(res.choices[0].message.content);
+    return res.choices[0].message.content ?? 'No summary';
   }
 })();
