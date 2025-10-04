@@ -37,10 +37,7 @@ const client = new Cerebras({
             result.textContent = 'No selection made';
             return;
           }
-
-          // result.textContent = response.text.slice(0, 300) + "..";
           try {
-            // const summary = await getGeminiSummary(response.text);
             const summary = await getCerebrasSummary(response.text);
             result.textContent = summary;
           } catch (e) {
@@ -71,10 +68,7 @@ const client = new Cerebras({
             result.textContent = 'No selection made';
             return;
           }
-
-          // result.textContent = response.text.slice(0, 300) + "..";
           try {
-            // const summary = await getGeminiSummary(response.text);
             const translation = await getCerebrasTranslation(
               response.text,
               languageSelect
@@ -90,6 +84,8 @@ const client = new Cerebras({
 
   document.getElementById('addNotesBtn').addEventListener('click', () => {
     const result = document.getElementById('resultBox');
+    const notesType = document.getElementById('notesTypeSelect').value;
+    const languageSelect = document.getElementById('languageSelect').value;
     result.textContent = 'Extracting text...';
 
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
@@ -107,11 +103,22 @@ const client = new Cerebras({
             result.textContent = 'No selection made';
             return;
           }
-
-          // result.textContent = response.text.slice(0, 300) + "..";
           try {
-            // const summary = await getGeminiSummary(response.text);
-            const reply = await sendMessageToBackend(response.text);
+            let textToSend;
+
+            if (notesType === 'selection') {
+              textToSend = response.text;
+            } else if (notesType === 'summarization') {
+              textToSend = await getCerebrasSummary(response.text);
+            } else if (notesType === 'translation') {
+              textToSend = await getCerebrasTranslation(
+                response.text,
+                languageSelect
+              );
+            } else {
+              throw new Error('Unsupported notesType: ' + notesType);
+            }
+            const reply = await sendMessageToBackend(textToSend);
             result.textContent = reply;
           } catch (e) {
             result.textContent = 'Backend API Error: ' + e.message;
@@ -148,8 +155,13 @@ const client = new Cerebras({
       messages: messages,
       model: 'llama3.1-8b',
     });
-    console.log(res.choices[0].message.content);
-    return res.choices[0].message.content;
+    // if (!res.ok) {
+    //   const { error } = await res.choices[0].finish_reason;
+    //   throw new Error(error?.message || 'Cerebras Request failed');
+    // }
+
+    const data = await res.choices[0].message.content;
+    return data;
   }
 
   async function getCerebrasSummary(text) {
@@ -171,8 +183,7 @@ const client = new Cerebras({
     //   throw new Error(error?.message || 'Cerebras Request failed');
     // }
 
-    // const data = await res.choices[0].message.content;
-    console.log(res.choices[0].message.content);
-    return res.choices[0].message.content ?? 'No summary';
+    const data = await res.choices[0].message.content;
+    return data ?? 'No summary';
   }
 })();

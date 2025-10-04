@@ -64,7 +64,7 @@ def ping():
 @app.post("/process")
 async def process(data: Message):
     await main(data.text)
-    return {"reply": f"You said: {data.text}"}
+    return {"reply": f"A note was succesfully made to Teacher.md"}
 
 
 
@@ -76,8 +76,9 @@ async def main(text):
     ):
         async with ClientSession(read_stream, write_stream) as session:
             await session.initialize()
-            tool, args = parse_query(f"Append {text} to Teacher.md")
+            tool, args = parse_query(f"Add to Teacher.md  {text}")
             print(tool,args)
             print(type(tool), type(args))
-            result2 = await session.call_tool(tool, args)
+            result = await session.call_tool(tool, args)
+            print(result.content[0].text)
 
