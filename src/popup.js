@@ -2,6 +2,8 @@
 
 import './popup.css';
 import Cerebras from '@cerebras/cerebras_cloud_sdk'; // Example import for Cerebras SDK
+// import streamablehttp_client from mcp.client.streamable_http
+// import ClientSession from mcp
 
 const client = new Cerebras({
   apiKey: `csk-48pcpc54y2e6nn5x3256kx9w8vp44e9w93wkt462nhd8err9`, // or chrome.storage.local.get()
@@ -16,8 +18,8 @@ const client = new Cerebras({
   // More information on Permissions can we found at
   // https://developer.chrome.com/extensions/declare_permissions
 
-  document.getElementById('summarize').addEventListener('click', () => {
-    const result = document.getElementById('result');
+  document.getElementById('summarizeBtn').addEventListener('click', () => {
+    const result = document.getElementById('resultBox');
     result.textContent = 'Extracting text...';
 
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
@@ -49,9 +51,9 @@ const client = new Cerebras({
     });
   });
 
-  document.getElementById('translate').addEventListener('click', () => {
+  document.getElementById('translateBtn').addEventListener('click', () => {
     const languageSelect = document.getElementById('languageSelect').value;
-    const result = document.getElementById('translateResult');
+    const result = document.getElementById('resultBox');
     result.textContent = 'Extracting text...';
 
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
@@ -86,6 +88,50 @@ const client = new Cerebras({
     });
   });
 
+  document.getElementById('addNotesBtn').addEventListener('click', () => {
+    const result = document.getElementById('resultBox');
+    result.textContent = 'Extracting text...';
+
+    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+      chrome.tabs.sendMessage(
+        tab.id,
+        { type: 'GET_SELECTED_TEXT' },
+        async (response) => {
+          if (chrome.runtime.lastError) {
+            // e.g., no content script injected
+            result.textContent = 'Error: ' + chrome.runtime.lastError.message;
+            return;
+          }
+
+          if (!response || !response.text) {
+            result.textContent = 'No selection made';
+            return;
+          }
+
+          // result.textContent = response.text.slice(0, 300) + "..";
+          try {
+            // const summary = await getGeminiSummary(response.text);
+            const reply = await sendMessageToBackend(response.text);
+            result.textContent = reply;
+          } catch (e) {
+            result.textContent = 'Backend API Error: ' + e.message;
+          }
+        }
+      );
+    });
+  });
+
+  async function sendMessageToBackend(text) {
+    const response = await fetch('http://localhost:8000/process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const data = await response.json();
+    console.log('Backend response:', data);
+    return data.reply;
+  }
+
   async function getCerebrasTranslation(text, language) {
     const content = `Translate ${text} into ${language} language. The translation is to the point, without much context given.`;
 
@@ -107,12 +153,6 @@ const client = new Cerebras({
   }
 
   async function getCerebrasSummary(text) {
-    // const client = new Cerebras({
-    //   apiKey:csk-pm5v5kxmxr993k5wj88j2x2dnym5tntwjnvhrdhrwnwtvywh,
-    // });
-
-    // const content = `Take the following text and rewrite it as a clear, concise explaination in 3-4 lines depending on text length.Text:${text}`;
-
     const messages = [
       {
         role: 'system',
