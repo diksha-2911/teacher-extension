@@ -1,4 +1,4 @@
-# Textsnap
+# TextSnap
 
 Textsnap is a lightweight Chrome extension designed for academics and researchers. It reads the content of a webpage and allows you to quickly generate summaries or translations of selected text. Additionally, it integrates with your Obsidian vault via the Obsidian MCP server, enabling you to directly save notes to markdown files without switching windows.
 
@@ -50,22 +50,27 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 
 # Project Setup
 
-Get your cerebras API key from [here](https://cloud.cerebras.ai/)
+Get your Cerebras API key from [here](https://cloud.cerebras.ai/)
 
 Get you Obsidian API key by adding `obsidian-local-rest-api` community plugin in your Obsidian app and add it to `.env` file in `backend`
 
 **Run frontend**
 
-```npm install
-
+```
+npm install
 ```
 
-```npm run watch
-
+```
+npm run watch
 ```
 
 **Run backend**
 
-```docker compose up --build
-
 ```
+docker compose up --build
+```
+
+# Project Flow
+
+The following flow-chart showcases the project flow 
+<img width="1430" height="717" alt="Screenshot 2025-10-04 230644" src="https://github.com/user-attachments/assets/16a450ae-9c01-4262-b65f-5e1486c55ac7" />
