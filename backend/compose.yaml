@@ -3,7 +3,7 @@ services:
     build: .
     environment:
       - MCP_HOST=http://gateway:9011/mcp
-      - OBSIDIAN_API_KEY=${OBSIDIAN_API_KEY}
+      - OBSIDIAN_API_KEY=ac0f269deb02d1939ab1ae4b6029bead8d6418d364d46c99c1d150243d272cfc
       - OBSIDIAN_HOST=https://127.0.0.1:27124/
 
     depends_on:

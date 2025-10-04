@@ -52,7 +52,7 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 
 Get your Cerebras API key from [here](https://cloud.cerebras.ai/)
 
-Get you Obsidian API key by adding `obsidian-local-rest-api` community plugin in your Obsidian app and add it to `.env` file in `backend`
+Get you Obsidian API key by adding `obsidian-local-rest-api` community plugin in your Obsidian app
 
 **Run frontend**
 
@@ -72,5 +72,5 @@ docker compose up --build
 
 # Project Flow
 
-The following flow-chart showcases the project flow 
+The following flow-chart showcases the project flow
 <img width="1430" height="717" alt="Screenshot 2025-10-04 230644" src="https://github.com/user-attachments/assets/16a450ae-9c01-4262-b65f-5e1486c55ac7" />
