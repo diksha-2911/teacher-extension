@@ -8,14 +8,6 @@ const client = new Cerebras({
 });
 
 (function () {
-  // We will make use of Storage API to get and store `count` value
-  // More information on Storage API can we found at
-  // https://developer.chrome.com/extensions/storage
-
-  // To get storage access, we have to mention it in `permissions` property of manifest.json file
-  // More information on Permissions can we found at
-  // https://developer.chrome.com/extensions/declare_permissions
-
   document.getElementById('summarizeBtn').addEventListener('click', () => {
     const result = document.getElementById('resultBox');
     result.textContent = 'Extracting text...';
@@ -26,7 +18,6 @@ const client = new Cerebras({
         { type: 'GET_SELECTED_TEXT' },
         async (response) => {
           if (chrome.runtime.lastError) {
-            // e.g., no content script injected
             result.textContent = 'Error: ' + chrome.runtime.lastError.message;
             return;
           }
@@ -57,7 +48,6 @@ const client = new Cerebras({
         { type: 'GET_SELECTED_TEXT' },
         async (response) => {
           if (chrome.runtime.lastError) {
-            // e.g., no content script injected
             result.textContent = 'Error: ' + chrome.runtime.lastError.message;
             return;
           }
@@ -92,7 +82,6 @@ const client = new Cerebras({
         { type: 'GET_SELECTED_TEXT' },
         async (response) => {
           if (chrome.runtime.lastError) {
-            // e.g., no content script injected
             result.textContent = 'Error: ' + chrome.runtime.lastError.message;
             return;
           }
@@ -153,10 +142,6 @@ const client = new Cerebras({
       messages: messages,
       model: 'llama3.1-8b',
     });
-    // if (!res.ok) {
-    //   const { error } = await res.choices[0].finish_reason;
-    //   throw new Error(error?.message || 'Cerebras Request failed');
-    // }
 
     const data = await res.choices[0].message.content;
     return data;
@@ -176,10 +161,6 @@ const client = new Cerebras({
       messages: messages,
       model: 'llama3.1-8b',
     });
-    // if (!res.ok) {
-    //   const { error } = await res.choices[0].finish_reason;
-    //   throw new Error(error?.message || 'Cerebras Request failed');
-    // }
 
     const data = await res.choices[0].message.content;
     return data ?? 'No summary';
