@@ -1,0 +1,23 @@
+services:
+  client:
+    build: .
+    environment:
+      - MCP_HOST=http://gateway:9011/mcp
+      - OBSIDIAN_API_KEY=ac0f269deb02d1939ab1ae4b6029bead8d6418d364d46c99c1d150243d272cfc
+      - OBSIDIAN_HOST=https://127.0.0.1:27124/
+
+    depends_on:
+      - gateway
+
+    ports:
+      - '8000:8000'
+
+  gateway:
+    image: docker/mcp-gateway
+    command:
+      - --transport=streaming
+      - --servers=obsidian
+      - --verbose=false
+      - --port=9011
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
