@@ -20,7 +20,7 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 
 ## Frontend:
 
-1. Built using chrome-extension-cli
+1. Built using `chrome-extension-cli`
 
 2. JavaScript, HTML, CSS
 
@@ -37,3 +37,35 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 2. **Obsidian API** - to interact with your Obsidian vault
 
 3. **MCP Gateway** - facilitates client-server communication between Textsnap and Obsidian
+
+# Installation
+
+1. Clone or download this repository.
+
+2. Open Chrome and navigate to `chrome://extensions/`.
+
+3. Enable Developer mode (toggle in the top-right corner).
+
+4. Click Load unpacked and select the directory of the extension.
+
+# Project Setup
+
+Get your cerebras API key from [here](https://cloud.cerebras.ai/)
+
+Get you Obsidian API key by adding `obsidian-local-rest-api` community plugin in your Obsidian app and add it to `.env` file in `backend`
+
+**Run frontend**
+
+```npm install
+
+```
+
+```npm run watch
+
+```
+
+**Run backend**
+
+```docker compose up --build
+
+```
