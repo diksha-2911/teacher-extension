@@ -26,9 +26,9 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 
 ## Backend:
 
-1. JavaScript and Python for connecting to the Obsidian MCP server
+1. JavaScript for text extraction, summarization, and translation using the Cerebras API
 
-2. Handles API requests, note saving, and communication between the extension and Obsidian
+2. Python for connecting to the Obsidian MCP server. Handles API requests, note saving, and communication between the extension and Obsidian
 
 ## APIs & Services:
 
@@ -36,7 +36,7 @@ The goal of Textsnap is to streamline research workflows, improve focus, and red
 
 2. **Obsidian API** - to interact with your Obsidian vault
 
-3. **MCP Gateway** - facilitates client-server communication between Textsnap and Obsidian
+3. **Docker MCP Gateway** - facilitates client-server communication between Textsnap and Obsidian
 
 # Installation
 
