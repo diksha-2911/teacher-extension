@@ -53,8 +53,6 @@ async def main(text):
         async with ClientSession(read_stream, write_stream) as session:
             await session.initialize()
             tool, args = parse_query(f"Add to Teacher.md  {text}")
-            print(tool,args)
-            print(type(tool), type(args))
             result = await session.call_tool(tool, args)
             print(result.content[0].text)
 
