@@ -4,7 +4,7 @@ import './popup.css';
 import Cerebras from '@cerebras/cerebras_cloud_sdk';
 
 const client = new Cerebras({
-  apiKey: `csk-48pcpc54y2e6nn5x3256kx9w8vp44e9w93wkt462nhd8err9`, // replace with your Cerebras API key
+  apiKey: `your_cerebras_key`, // replace with your Cerebras API key
 });
 
 (function () {

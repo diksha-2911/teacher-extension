@@ -40,7 +40,7 @@ def ping():
 @app.post("/process")
 async def process(data: Message):
     await main(data.text)
-    return {"reply": f"A note was succesfully made to Teacher.md"}
+    return {"reply": f"A note was succesfully made to TextSnap.md"}
 
 
 
@@ -52,7 +52,7 @@ async def main(text):
     ):
         async with ClientSession(read_stream, write_stream) as session:
             await session.initialize()
-            tool, args = parse_query(f"Add to Teacher.md  {text}")
+            tool, args = parse_query(f"Add to Textsnap.md  {text}")
             result = await session.call_tool(tool, args)
             print(result.content[0].text)
 
